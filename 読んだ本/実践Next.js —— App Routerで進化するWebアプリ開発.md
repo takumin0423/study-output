@@ -168,3 +168,101 @@
 #### Dynamic Segmentの使用
 - Dynamic Segmentが含まれるRouteはprops.paramsを参照することでパスパラメーターを参照できる
 	- searchParamsと同様に不特定多数のパスパラメーターが送られてくるので、動的レンダリングになる
+
+## App Routerの規約
+### Segment構成ファイル
+- Route Segmentを構成するファイルは複数あり、それぞれ定められた名称のファイルを適切に配置することで有効になる
+
+| 名称        | 拡張子           | 用途                       |
+| --------- | ------------- | ------------------------ |
+| layout    | .js .jsx .tsx | Segmentとその子の共有UI         |
+| page      | .js .jsx .tsx | Segment独自のUI             |
+| loading   | .js .jsx .tsx | Segmentとその子の読み込みUI       |
+| not-found | .js .jsx .tsx | Segmentとその子の404UI        |
+| error     | .js .jsx .tsx | Segmentとその子のエラーUI        |
+| route     | .js .ts       | サーバーサイドAPIエンドポイント        |
+| template  | .js .jsx .tsx | 再レンダリングされるレイアウトUI        |
+| default   | .js .jsx .tsx | Parallel routeのフォールバックUI |
+
+- Segment構成ファイルは、React Suspenseを前提としたコンポーネントツリーを構築する
+- エラー発生時の表示は「Error Boundary」に委ねる
+- Route Segmentを元に構築されるコンポーネントツリーのうち、 `<Suspense />`と `<ErrorBoundary />`は自動で挿入される
+- 子Segmentは親Segmentのコンポーネント内にネストされる
+
+#### React Suspense
+- 子コンポーネントが読み込みを完了するまでフォールバックUIを表示する機能
+- コンポーネントツリーの一部を表示する準備が出来ていない場合に、その部分の読み込み状態を宣言的に指定できる
+
+#### Error Boundary
+- 子コンポーネントでErrorがスローされた場合にフォールバックUIを表示する機能
+- try...catch文のcatchブロックに似たような働きをする
+
+### 各構成ファイルの役割
+#### loading
+- `<Suspense />`の上に構築できる簡易的なローディングUIを提供する
+- Server Componentだけでなく、Client Componentとしても使用できる
+- Propsは指定できないので、Segmentのデザインに応じて必要な実装を施す
+	- ローディングスピナーのようなUIが一般的
+
+#### not-found
+- データ取得や画面提供の際にリソースが見つからなかった旨を通達する404 UIを提供する
+- 関連するSegmentから `notFound()`が実行された際に表示される
+- page.tsxやlayout.tsxで通常WebAPIを経由してデータを取得するので、その際にリソースが見つからなかった場合に慣習的に `notFound()`を実行する
+- `notFound()`を実行すると例外がスローされ、内部的に例外をcatchするようにNext.jsは設計されている
+
+#### error
+- データの取得や画面提供の際に例外が発生した場合、エラーを通達するUIを提供できる
+- `"use client"`ディレクティブを宣言してClient Componentとして定義する必要がある
+- layout.tsxで発生した例外はその親階層にあるerror.tsxで処理されることに注意
+
+#### route
+- 画面ではなく、WebAPIを提供するためのファイル
+- App Routerで実装するWebAPIのことをRoute Handlerと呼ぶ
+	- Pages Routerで提供されていたAPI Routesと似たような機能
+
+#### default
+- Parallel Routesという機能のために使用するファイル
+
+#### global-error
+- Segment単位で設置しないファイル
+- 他のerror.tsxでハンドリングされなかった例外が発生した場合の画面を定義する
+- `"use client"`ディレクティブを宣言してClient Componentとして定義する必要がある
+
+### Segment構成フォルダ
+- App Routerでは、フォルダ名の命名規則でSegment構成をコントロールする
+
+#### Dynamic Route Segment
+- パスに含まれるパラメーターを参照できる
+- フォルダ名称を[slug]のように[]で囲むことで、パスパラメーターに応じた画面を提供できる
+	- LayoutファイルやPageファイルで、URLリクエストのうち[slug]にあたる文字列をパスパラメーター値として参照できる
+
+| Route                    | URLリクエストの例 | params        |
+| ------------------------ | ---------- | ------------- |
+| app/blog/[slug]/page.tsx | /blog/a    | { slug: 'a' } |
+| app/blog/[slug]/page.tsx | /blog/b    | { slug: 'b' } |
+| app/blog/[slug]/page.tsx | /blog/c    | { slug: 'c' } |
+
+#### Catch-all Segment
+- [...slug]という命名規則でフォルダを定義すると、ネストされたPathに対応して配列としてパスパラメーターを参照できる
+
+| Route                       | URLリクエストの例  | params                    |
+| --------------------------- | ----------- | ------------------------- |
+| app/shop/[...slug]/page.tsx | /shop/a     | { slug: ['a'] }           |
+| app/shop/[...slug]/page.tsx | /shop/a/b   | { slug: ['a', 'b'] }      |
+| app/shop/[...slug]/page.tsx | /shop/a/b/c | { slug: ['a', 'b', 'c'] } |
+
+#### Optional Catch-all Segment
+- [[...slug]]という命名規則でフォルダを定義する
+- Catch-all Segmentとの違いは、一行目の/shopのリクエストにも応じる点
+
+| Route                         | URLリクエストの例  | params                    |
+| ----------------------------- | ----------- | ------------------------- |
+| app/shop/[[...slug]]/page.tsx | /shop       | {}                        |
+| app/shop/[[...slug]]/page.tsx | /shop/a     | { slug: ['a'] }           |
+| app/shop/[[...slug]]/page.tsx | /shop/a/b   | { slug: ['a', 'b'] }      |
+| app/shop/[[...slug]]/page.tsx | /shop/a/b/c | { slug: ['a', 'b', 'c'] } |
+
+#### Route Groups
+- フォルダの一部をURL Pathから除外したい時、フォルダ名称を(feature)のように()で囲むことで、Route Groupsとして識別される
+- 利用者画面、管理画面のように用途ごとに異なるLayoutを適用したいケースなどでRoute Groupsを活用できる
+- Route Groupsを適用したフォルダ配下にlayout.tsxを配置すれば、その配下のSegmentにだけ特定のlayout.tsxを適用させられる
