@@ -169,7 +169,7 @@
 - Dynamic Segmentが含まれるRouteはprops.paramsを参照することでパスパラメーターを参照できる
 	- searchParamsと同様に不特定多数のパスパラメーターが送られてくるので、動的レンダリングになる
 
-## App Routerの規約
+## 第3章 App Routerの規約
 ### Segment構成ファイル
 - Route Segmentを構成するファイルは複数あり、それぞれ定められた名称のファイルを適切に配置することで有効になる
 
@@ -266,3 +266,19 @@
 - フォルダの一部をURL Pathから除外したい時、フォルダ名称を(feature)のように()で囲むことで、Route Groupsとして識別される
 - 利用者画面、管理画面のように用途ごとに異なるLayoutを適用したいケースなどでRoute Groupsを活用できる
 - Route Groupsを適用したフォルダ配下にlayout.tsxを配置すれば、その配下のSegmentにだけ特定のlayout.tsxを適用させられる
+
+#### Private Folderとコロケーション
+- 特定機能の関連ファイルをまとめることをコロケーションと呼ぶ
+- appディレクトリ内のフォルダ名称の先頭にアンダースコアをつけると、そのフォルダに含まれるすべてのファイルをルーティング対象外に出来る
+	- アンダースコアを接頭辞に持つフォルダをPrivate Folderと呼ぶ
+	- `_components`という名称のフォルダは、慣例的に閉じられたスコープに必要なコンポーネントの格納先であることを示す
+
+#### Parallel RoutesとIntercepting Routes
+- Parallel RoutesとIntercepting Routesを使用すると、ソフトナビゲーションを活用したUIを実装できる
+- Parallel RoutesはSlotと呼ばれる、@folderというフォルダ名規約を使用したフォルダを使用して作成する
+	- @folderというフォルダ名規約を使用したフォルダはSegmentではなくなり、その存在がURLに影響されなくなる
+	- Slotは、LayoutにおいてReact Componentのchildrenと同じようにPropsとして渡され、子ノードとしてレンダリングされる
+	- @folderをRootとしたSubtreeと、表示しているRoute Segmentが一致したタイミングでPropsに渡されたSlotがレンダリングされる
+	- 一度表示されたあとは、一致しないRoute SegmentにソフトナビゲーションしてもSlotは表示され続ける
+	- default.tsxは、一致するRoute Segmentが表示されるまでの間、Slotに表示されるフォールバックUI
+
