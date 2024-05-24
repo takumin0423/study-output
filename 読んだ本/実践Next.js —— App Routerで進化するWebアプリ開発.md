@@ -1,6 +1,7 @@
 ## これはなに
 - [実践Next.js —— App Routerで進化するWebアプリ開発](https://www.amazon.co.jp/%E5%AE%9F%E8%B7%B5Next-js-%E2%80%94%E2%80%94-App-Router%E3%81%A7%E9%80%B2%E5%8C%96%E3%81%99%E3%82%8BWeb%E3%82%A2%E3%83%97%E3%83%AA%E9%96%8B%E7%99%BA-%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E9%81%B8%E6%9B%B8-ebook/dp/B0CW1KC9N8/ref=sr_1_1?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&crid=LT8AJNGU7JJ4&dib=eyJ2IjoiMSJ9.vpQs928uj7OzIAi8CmBvPvRUPQERB3tPpvrE2vkgKFWhG7aU7eFu7nqi5APOEDtGxZRQ_eTYUarDFbLZnO0WponG-_LYPweI--oVhIlnpF6OBWuZJuLKbKAdUoz09T9KTo7y3nOc0zNSSAO72pbFdyCYTXQ97MSq71I1BneIMAYR76TpHB-mR7T5iKzipBMHcamWFKpczHsuvROh3bZzNX1ydsS4lKQxBGI_UO3YEzIseoLcHiwDHD7qGMf62jGUStXFk915r3WOzFr--uO_KjloCnd_4NUJutxoVFyd4fw.FOZcenUP-SG7DkxkxY8WiUzsWUgIpEPwvRHKPtuZQho&dib_tag=se&keywords=%E5%AE%9F%E8%B7%B5Next.js&qid=1715821487&sprefix=%E5%AE%9F%E8%B7%B5next.js%2Caps%2C179&sr=8-1)を読み直していくのでまとめ
 - 特に重要だと感じた点を記載する
+- Next.js15でキャッシュ周りに結構変更がありそうなので、キャッシュの章はスキップするかも
 
 ## 第1章 Next.jsの基礎
 ### Route定義に関わる用語
@@ -281,4 +282,31 @@
 	- @folderをRootとしたSubtreeと、表示しているRoute Segmentが一致したタイミングでPropsに渡されたSlotがレンダリングされる
 	- 一度表示されたあとは、一致しないRoute SegmentにソフトナビゲーションしてもSlotは表示され続ける
 	- default.tsxは、一致するRoute Segmentが表示されるまでの間、Slotに表示されるフォールバックUI
+- Intercepting RoutesはRouteをインターセプトするためのRoute定義
+	- 通常定義されたSegmentをインターセプトし、このフォルダ内に格納された異なるSegment定義を画面として提供する
+	- ソフトナビゲーションでモーダル画面を表示する、といったUI実装が可能になる
+- 相対パス規則に似た（..）規則で定義する
 
+| 規則       | インターセプトするSegment |
+| -------- | ---------------- |
+| (.)      | 同じレベル            |
+| (..)     | 1つ上の階層           |
+| (..)(..) | 2つ上の階層           |
+| (...)    | appディレクトリのroot   |
+
+- インターセプトが発動する条件はソフトナビゲーション時のみ
+- 画面をリロードするとハードナビゲーションとなるので、インターセプトは発生せずに通常定義されたSegmentが画面として提供される
+
+### Routeのメタデータ
+- headタグ内のtitle要素やmeta要素などのSEO観点で重要なメタデータを定義するAPIが用意されている
+
+#### 静的メタデータ
+- 固定のメタデータを出力する
+- 任意SegmentのPageファイルやLayoutファイルからmetadataオブジェクトをexportすると、レンダリングされるHTMLに適切なメタデータが出力される
+
+#### 動的メタデータ
+- リクエスト内容に応じてメタデータを出し分ける
+- 任意SegmentのPageファイルやLayoutファイルから、非同期関数であるgenerateMetadata関数をexportする
+- Server Componentと同じようにデータを取得でき、取得したデータのテキストを出力する
+- 画面リクエストに対して同じ関数が2回呼ばれているが、Next.jsが内部的にRequestのメモ化を行って同じとみなせるデータ取得を1つにまとめてくれているため、WebAPIサーバーの負担が増えることはない
+	- 同じとみなせないデータ取得はそれぞれ別のリクエストとして扱われる
