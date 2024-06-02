@@ -1,6 +1,7 @@
 ## これはなに
 - [実践Next.js —— App Routerで進化するWebアプリ開発](https://www.amazon.co.jp/%E5%AE%9F%E8%B7%B5Next-js-%E2%80%94%E2%80%94-App-Router%E3%81%A7%E9%80%B2%E5%8C%96%E3%81%99%E3%82%8BWeb%E3%82%A2%E3%83%97%E3%83%AA%E9%96%8B%E7%99%BA-%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E9%81%B8%E6%9B%B8-ebook/dp/B0CW1KC9N8/ref=sr_1_1?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&crid=LT8AJNGU7JJ4&dib=eyJ2IjoiMSJ9.vpQs928uj7OzIAi8CmBvPvRUPQERB3tPpvrE2vkgKFWhG7aU7eFu7nqi5APOEDtGxZRQ_eTYUarDFbLZnO0WponG-_LYPweI--oVhIlnpF6OBWuZJuLKbKAdUoz09T9KTo7y3nOc0zNSSAO72pbFdyCYTXQ97MSq71I1BneIMAYR76TpHB-mR7T5iKzipBMHcamWFKpczHsuvROh3bZzNX1ydsS4lKQxBGI_UO3YEzIseoLcHiwDHD7qGMf62jGUStXFk915r3WOzFr--uO_KjloCnd_4NUJutxoVFyd4fw.FOZcenUP-SG7DkxkxY8WiUzsWUgIpEPwvRHKPtuZQho&dib_tag=se&keywords=%E5%AE%9F%E8%B7%B5Next.js&qid=1715821487&sprefix=%E5%AE%9F%E8%B7%B5next.js%2Caps%2C179&sr=8-1)を読み直していくのでまとめ
 - 読んだら追記していく
+- 第5章はサンプルアプリケーションの解説なのでスキップ
 
 ## 第1章 Next.jsの基礎
 ### Route定義に関わる用語
@@ -324,3 +325,38 @@
 	- app/api/hello/route.tsというRoute Handler定義ファイルは、/api/helloのリクエストを処理する
 - route.tsファイルからexportする関数は、それぞれHTTPリクエストのメソッドに対応している
 	- HTTPリクエストのメソッドに対応する関数がexportされていない場合、Next.jsは405 Method Not Allowedレスポンスを返す
+- Route HandlerはWeb標準のFetch APIに準拠していて、関数が返すNextResponseはFetch APIのResponseに基づいている
+	- 関数の第1引数でFetch APIのRequestに基づくNextRequestを受け取ることもできる
+- App Routerはファイルの配置場所によってはPageファイルとAPIファイルでコンフリクトを起こす
+	- Pages Routerの慣例にならってapp/apiというディレクトリを用意し、そこでRoute Handlerを定義しておけば上記のコンフリクトは発生しない
+
+### Route Handlerのレンダリング
+- Route Handlerは主にJSONをレンダリングし、画面のRouteと同様に静的レンダリング/動的レンダリングを切り替えることが可能
+	- サーバーのログで○アイコンが付与されたRouteは静的Route Handler、λアイコンが付与されたRouteは動的Route Handlerとなる
+
+#### 静的Route Handler
+- JSONなどのレスポンスボディをあらかじめキャッシュファイルとして出力するので、リクエストのたびに外部WebAPIサーバーやDBからデータを取得する必要がない
+	- Pages RouterのころのAPI Routesではリクエストのたびに評価してレスポンスを返していた
+
+#### 動的Route Handler
+- 画面のRouteと同様に、Route Handlerもビルド時にRouteのレンダリングを試行するが、この時に以下の要因が検出されると、Next.jsは該当のRoute Handlerを動的Route Handlerとみなす
+	- Dynamic Segment値の参照
+	- Requestオブジェクトの参照
+	- 動的関数の使用
+	- GETとHEAD以外のHTTP関数のexport
+	- Segment Config Optionsの指定
+
+### Route Handlerの使用例
+- Route Handlerのもっとも代表的な使用方法として考えられるのが、ブラウザからのHTTPリクエストに対応するというケース
+	- UIはユーザー操作に応じ、最終的にデータベースに操作内容を保存するため、fetch関数などを使用してWebAPIをコールする
+	- 例えば、認証認可機能を備えたWebアプリケーションサーバー（Next.js）自身がWebAPIを備えている場合、Cookieを頼りにログインユーザー情報の参照をNext.js自身に委ねることができる
+
+## 第6章 データ取得とキャッシュ
+### fetch関数でのデータ取得
+- Reactには、同じfetch関数のリクエストは、自動でひとつのfetch関数リクエストにまとめるという拡張が施されており、これをRequestのメモ化と呼ぶ
+	- 動的なメタデータを生成するためのgenerateMetadata関数など、1回のレンダリングで同じデータ取得を行いたいケースはよくある
+	- コンポーネント単位でデータ取得できるのはメリットだが、Requestのメモ化を怠ると過剰なデータソースアクセスとなってしまうので、共通関数として定義して処理をまとめるなど、あらかじめ対策を検討しておくことが重要
+
+### fetch関数のキャッシュ
+- Next.jsにはIncremental Cacheという組み込みのキャッシュシステムが存在する
+	- データ取得をキャッシュし、必要に応じて更新するメカニズムを持つ
