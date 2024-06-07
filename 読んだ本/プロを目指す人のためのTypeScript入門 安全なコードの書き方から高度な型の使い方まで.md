@@ -1,7 +1,6 @@
 ## これはなに
 - [プロを目指す人のためのTypeScript入門 安全なコードの書き方から高度な型の使い方まで ](https://www.amazon.co.jp/%E3%83%97%E3%83%AD%E3%82%92%E7%9B%AE%E6%8C%87%E3%81%99%E4%BA%BA%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AETypeScript%E5%85%A5%E9%96%80-%E5%AE%89%E5%85%A8%E3%81%AA%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9%E3%81%8B%E3%82%89%E9%AB%98%E5%BA%A6%E3%81%AA%E5%9E%8B%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9%E3%81%BE%E3%81%A7-Software-Design-plus/dp/4297127474/ref=sr_1_1_sspa?crid=VKGPRC8HHIIO&dib=eyJ2IjoiMSJ9.24sIv_pu_uivfW5Qa5RfI-cXl_uhXTHoXuPBzAAJat_19kyQDHjEkITU1YtjzadoXcYnLvpsd8XNjksTrOQZs4otVQq--H7iPenC5QCgg7SO9x-jLZYOyU222QQDJ92LRNoYH_2ql_pctfMTKm6xvavp7ZkKd4lY3exZYK1sHNpk2Ck36F05LnTnscERukMY1TgdEb3nSXgQp5LHMXos0QCP3oDv3AGdiDzWMspRdGjQbYEniWc5q2n7_nGb-4Dg1P3ncJpAAV6J6llDnu4w0aVG0CZgp-yYAFRdB3DFeVs.s91H0WPOX5I5rolrP9pALAQTWvi0ymD6ICTI_cthsZ8&dib_tag=se&keywords=typescript&qid=1712950831&sprefix=typescri%2Caps%2C173&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1)を改めて読み直したので、まとめる
-- 重要な部分だけ
-- 6章以降は設定だったりJavaScript自体の話なので少なめ
+- 7章以降は設定だったりJavaScript自体の話なので少なめ
 
 ## 第1章 イントロダクション
 ### 型について
