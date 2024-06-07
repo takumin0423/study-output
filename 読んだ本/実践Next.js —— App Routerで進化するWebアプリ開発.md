@@ -1,7 +1,8 @@
 ## これはなに
 - [実践Next.js —— App Routerで進化するWebアプリ開発](https://www.amazon.co.jp/%E5%AE%9F%E8%B7%B5Next-js-%E2%80%94%E2%80%94-App-Router%E3%81%A7%E9%80%B2%E5%8C%96%E3%81%99%E3%82%8BWeb%E3%82%A2%E3%83%97%E3%83%AA%E9%96%8B%E7%99%BA-%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E9%81%B8%E6%9B%B8-ebook/dp/B0CW1KC9N8/ref=sr_1_1?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&crid=LT8AJNGU7JJ4&dib=eyJ2IjoiMSJ9.vpQs928uj7OzIAi8CmBvPvRUPQERB3tPpvrE2vkgKFWhG7aU7eFu7nqi5APOEDtGxZRQ_eTYUarDFbLZnO0WponG-_LYPweI--oVhIlnpF6OBWuZJuLKbKAdUoz09T9KTo7y3nOc0zNSSAO72pbFdyCYTXQ97MSq71I1BneIMAYR76TpHB-mR7T5iKzipBMHcamWFKpczHsuvROh3bZzNX1ydsS4lKQxBGI_UO3YEzIseoLcHiwDHD7qGMf62jGUStXFk915r3WOzFr--uO_KjloCnd_4NUJutxoVFyd4fw.FOZcenUP-SG7DkxkxY8WiUzsWUgIpEPwvRHKPtuZQho&dib_tag=se&keywords=%E5%AE%9F%E8%B7%B5Next.js&qid=1715821487&sprefix=%E5%AE%9F%E8%B7%B5next.js%2Caps%2C179&sr=8-1)を読み直していくのでまとめ
 - 読んだら追記していく
-- 第5章はサンプルアプリケーションの解説なのでスキップ
+- 第5章はサンプルアプリケーションの解説のみなのでスキップ
+- 第7章はサンプルコードについての解説がメインなので少なめ
 
 ## 第1章 Next.jsの基礎
 ### Route定義に関わる用語
@@ -388,7 +389,7 @@
 	- 実践Next.js執筆時点では不安定な機能、将来的に名前が変更されたり、引数などの仕様が変わる可能性がある
 - Reactのcache関数と異なり、Next.jsのunstable_cache関数はコンポーネントの中で利用可能
 
-## 認証機能
+## 第7章 認証機能
 ### 環境変数の設定
 - Next.jsでは.envファイルの読み込みを標準でサポートしている
 - create-next-appで作成したプロジェクトでは、はじめから.env*.localファイルは.gitignore対象になる
@@ -413,3 +414,7 @@
 	- Middlewareはリクエストまたはレスポンスのヘッダーの書き換えやリダイレクトといった中間処理を行える
 - NextAuth.jsではMiddlewareを活用して、特定のURLパターンにマッチするRouteを認証が必要なRouteとしてハンドリングできる
 	- 未ログイン状態で特定のページに遷移しようとした場合、ログイン画面へとリダイレクトさせたりできる
+
+### getServerSessionの利用
+- next-authパッケージからexportされているgetServerSession関数を使用すると、あらゆるサーバーサイド処理でログインユーザー情報を参照できる
+- プロジェクト固有のauthOptionsが適用されたgetServerSession関数を用意しておくと、都度authOptionsをimportしなくて済むようになる
