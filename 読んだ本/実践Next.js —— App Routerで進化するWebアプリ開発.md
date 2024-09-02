@@ -1,8 +1,6 @@
 ## これはなに
-- [実践Next.js —— App Routerで進化するWebアプリ開発](https://www.amazon.co.jp/%E5%AE%9F%E8%B7%B5Next-js-%E2%80%94%E2%80%94-App-Router%E3%81%A7%E9%80%B2%E5%8C%96%E3%81%99%E3%82%8BWeb%E3%82%A2%E3%83%97%E3%83%AA%E9%96%8B%E7%99%BA-%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E9%81%B8%E6%9B%B8-ebook/dp/B0CW1KC9N8/ref=sr_1_1?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&crid=LT8AJNGU7JJ4&dib=eyJ2IjoiMSJ9.vpQs928uj7OzIAi8CmBvPvRUPQERB3tPpvrE2vkgKFWhG7aU7eFu7nqi5APOEDtGxZRQ_eTYUarDFbLZnO0WponG-_LYPweI--oVhIlnpF6OBWuZJuLKbKAdUoz09T9KTo7y3nOc0zNSSAO72pbFdyCYTXQ97MSq71I1BneIMAYR76TpHB-mR7T5iKzipBMHcamWFKpczHsuvROh3bZzNX1ydsS4lKQxBGI_UO3YEzIseoLcHiwDHD7qGMf62jGUStXFk915r3WOzFr--uO_KjloCnd_4NUJutxoVFyd4fw.FOZcenUP-SG7DkxkxY8WiUzsWUgIpEPwvRHKPtuZQho&dib_tag=se&keywords=%E5%AE%9F%E8%B7%B5Next.js&qid=1715821487&sprefix=%E5%AE%9F%E8%B7%B5next.js%2Caps%2C179&sr=8-1)を読み直していくのでまとめ
+- [実践Next.js —— App Routerで進化するWebアプリ開発](https://amzn.asia/d/d1X1aey)を読み進めていくので読書メモを書く
 - 読んだら追記していく
-- 第5章はサンプルアプリケーションの解説のみなのでスキップ
-- 第7章はサンプルコードについての解説がメインなので少なめ
 
 ## 第1章 Next.jsの基礎
 ### Route定義に関わる用語
@@ -418,3 +416,29 @@
 ### getServerSessionの利用
 - next-authパッケージからexportされているgetServerSession関数を使用すると、あらゆるサーバーサイド処理でログインユーザー情報を参照できる
 - プロジェクト固有のauthOptionsが適用されたgetServerSession関数を用意しておくと、都度authOptionsをimportしなくて済むようになる
+
+## 第8章 モーダル表示とデータ連携
+### Parallel RoutesとIntercepting Routesを用いたモーダル
+- Parallel RoutesとIntercepting Routesを用いてモーダルを実装すると、背景を維持したまま任意のURLでモーダルを開くことが出来る
+	- モーダルが開かれた状態で画面をリロードすると詳細画面が表示される
+- App Routerで特徴的なParallel RoutesとIntercepting Routesを活用したモーダル実装パターンのUX上のメリット
+	- モーダル表示により遷移元のコンテキストを失わないため、没入感を維持しやすい
+	- 遷移元の画面に戻らずにモーダル上で次々と画面遷移できる
+	- モーダル（遷移先）のURLをシェアできる
+	- モーダル（遷移先）のURLをシェアしても遷移元の情報を漏らさない
+
+## 第9章 データ更新とUI
+### Server Actionの基礎
+- Server Actionsをひとことで表すと「**Formからサーバーの非同期関数を直接呼び出せる機能**」
+- API Clientを介してRoute Handlerを呼び出していた従来のアプローチと比較すると、以下のメリットがある
+	- 中間コード（API Client）がなくなる
+	- Browser向けにバンドルされていたAPI Clientが少なくなる
+	- ハイドレーションが完了する前に実行できる
+	- 直接関数を呼び出すことができるため、TypeScriptを使用している場合は型推論との相性が良い
+- `use server`ディレクティブを宣言することでServer Actionsを使える状態に出来る
+- form要素のaction属性にServer Actionsとして定義した非同期関数を渡すのが代表的な使用例
+	- その非同期関数は、第1引数にWeb標準のFormDataオブジェクトを受け取る
+- Server Actionsを使う方式はProgressive Enhancementを有効にする
+	- Progressive Enhancementとは、JavaScriptを使用しない（または無効）状態でも、formの本質的な機能を損なわないようにする実装方針のこと
+	- action属性にServer Actionsを渡すことで、ユーザーはハイドレーション前にFormを送信できる
+		- ハイドレーションが完了する前からFormが使えるので、ユーザーを待たせることがない
