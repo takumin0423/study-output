@@ -428,7 +428,7 @@
 	- モーダル（遷移先）のURLをシェアしても遷移元の情報を漏らさない
 
 ## 第9章 データ更新とUI
-### Server Actionの基礎
+### Server Actionsの基礎
 - Server Actionsをひとことで表すと「**Formからサーバーの非同期関数を直接呼び出せる機能**」
 - API Clientを介してRoute Handlerを呼び出していた従来のアプローチと比較すると、以下のメリットがある
 	- 中間コード（API Client）がなくなる
@@ -442,3 +442,33 @@
 	- Progressive Enhancementとは、JavaScriptを使用しない（または無効）状態でも、formの本質的な機能を損なわないようにする実装方針のこと
 	- action属性にServer Actionsを渡すことで、ユーザーはハイドレーション前にFormを送信できる
 		- ハイドレーションが完了する前からFormが使えるので、ユーザーを待たせることがない
+
+### Server Actionsによるデータ保存
+- On-demand Revalidationとは、**キャッシュを無効化するプロセス**のこと
+	- Time-based Revalidationと異なるのは、任意のタイミングでキャッシュを無効か出来る点
+	- 実行するためのAPIが2つある
+		- revalidatePath: 特定のRouteのパスでキャッシュを無効化する
+		- revalidateTag: 特定のタグ文字列でキャッシュを無効化する
+	- On-demand Revalidationを実行しても、**対象のキャッシュが即座に再作成されるわけではない**
+		- あくまで対象のキャッシュを無効化するのみにとどまる
+		- キャッシュが再作成されるのは、必要になったタイミング（リクエスト時）
+- Time-based RevalidationとOn-demand Revalidationの違いは以下のとおり
+	- **Time-based Revalidation**
+		- 有効期限内はキャッシュを返す
+		- 有効期限を過ぎた「最初のリクエスト」で以下のような挙動をする
+			- （期限切れの）キャッシュを返す
+			- 裏側でキャッシュを再作成する
+			- 次のリクエストは再作成した新しいキャッシュを返す
+	- **On-demand Revalidation**
+		- 有効期限内はキャッシュを返す
+		- 任意のタイミングで「無効化」されたことを記録する
+		- 無効化されたキャッシュは返さない
+		- 必要になったタイミング（リクエスト時）に再作成する
+- Next.jsにおけるキャッシュの仕様上、Route HandlerではOn-demand Revalidationを使うことはあまりおすすめできない
+	- 外部CMSサービスからデータを取得するような場合では、Route HandlerでしかOn-demand Revalidationを活用できない場面もある
+- 特別な理由がない限り「データの作成、更新、削除」においてはRoute HandlerよりもServer Actionsを優先して使用するべき
+
+### Server Actionsのエラーハンドリング
+- Formの状態を保持するHookとしてuseFromStateというReact標準のHookがあり、これをServer Actionsと組み合わせて使う
+	- ReactのuseReducerに似ている
+
