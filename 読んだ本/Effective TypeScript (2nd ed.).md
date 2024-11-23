@@ -1,33 +1,52 @@
 ## これはなに
 - 特に重要だと感じた部分の読書メモ
+- 英語版だけどDeepl使って翻訳して読んでる
 - 読んだら追記する
 
-## 1. Getting to Know TypeScript
+## 1. TypeScriptについて知ろう
+### TypeScriptとJavaScriptの関係を理解する
+- すべてのJavaScriptプログラムはTypeScriptプログラムだが、すべてのTypeScriptプログラムがJavaScriptプログラムというわけではない
+	- TypeScriptが型を指定するために構文を追加しているから
+- TypeScriptの型システムの目標のひとつは、コードを実行することなく、実行時に例外をスローするコードを検出すること
+	- TypeScriptが静的型システムであると説明される場合、この能力を指している
+- TypeScriptの型システムの指針となる原則は、JavaScriptの実行時動作をモデル化すること
+	- ただ、JavaScriptとして奇妙な使用法の場合、型チェッカーは開発者の意図によるものよりもエラーの可能性が高いと判断し、例外をスローしなくてもエラーを警告する
+- 型チェックを行ったとしても、実行時にエラーが発生する可能性はある
+	- 範囲外の配列アクセスや任意の型を使用する場合など
+	- 根本的な原因は、TypeScriptが値の型（静的型）と実行時の実際の型を正しく理解できなかったことにある
+		- 静的型の正確性を保証できる型システムは「健全である」と言われるが、TypeScriptの型システムは「健全である」とは言えない
+			- 健全であるように意図されたこともない
+- 型システムの健全性を重要視するのであれば、Reason, PureScript, Dartなど他の言語の採用を検討した方が良い
+	- TypeScriptよりも実行時の安全性をより保証するが、代償としてコードが正しいことを型チェッカーに納得させるのにより多くの作業が必要となる
+	- どれもJavaScriptのスーパーセットではないため、移行がより複雑になる
+- 型注釈は、TypeScriptに開発者の意図を伝え、正しいコードと正しくないコードを区別するのに役立つ
+
+### 自分が使用しているTypeScriptのオプションを把握する
+
+
+## 2. TypeScriptの型システム
 - sample
 
-## 2. TypeScript's Type System
+## 3. 型推論と制御フロー解析
 - sample
 
-## 3. Type Inference and Control Flow Analysis
+## 4. タイプデザイン
 - sample
 
-## 4. Type Design
+## 5. 不健全性とあらゆるタイプ
 - sample
 
-## 5. Unsoundness and the any Type
+## 6. ジェネリクスと型レベルプログラミング
 - sample
 
-## 6. Generics and Type-Level Programming
+## 7. TypeScriptのレシピ
 - sample
 
-## 7. TypeScript Recipes
+## 8. 型宣言と@types
 - sample
 
-## 8. Type Declarations and @types
+## 9. コードの記述と実行
 - sample
 
-## 9. Writing and Running Your Code
-- sample
-
-## 10. Modernization and Migration
+## 10. 近代化と移行
 - sample
