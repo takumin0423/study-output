@@ -22,7 +22,10 @@
 - 型注釈は、TypeScriptに開発者の意図を伝え、正しいコードと正しくないコードを区別するのに役立つ
 
 ### 自分が使用しているTypeScriptのオプションを把握する
-
+- noImplicitAnyは、変数の型を決定できない場合にTypeScriptが実行する処理を制御する
+	- オンにすることで、TypeScriptが型に関する問題を検出できるようになる
+	- 可能な限りオンにするべき
+- strictNullChecksは、あらゆる型においてnullとundefinedが許容される値であるかどうかを制御する
 
 ## 2. TypeScriptの型システム
 - sample
