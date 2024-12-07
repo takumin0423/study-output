@@ -1,6 +1,5 @@
 ## これはなに
 - 特に重要だと感じた部分の読書メモ
-- 英語版だけどDeepl使って翻訳して読んでる
 - 読んだら追記する
 
 ## 1. TypeScriptについて知ろう
@@ -26,6 +25,12 @@
 	- オンにすることで、TypeScriptが型に関する問題を検出できるようになる
 	- 可能な限りオンにするべき
 - strictNullChecksは、あらゆる型においてnullとundefinedが許容される値であるかどうかを制御する
+	- 新しいプロジェクト、TypeScriptの使用経験がある場合はなるべくオンにするべき
+	- JavaScriptをTypeScriptに移行している場合はオフにするのもあり
+		- オフにする場合は、`undefined is not an object`などの実行時エラーが発生しないように注意する
+- 他のオプションはnoImplicitAnyやstrictNullChecksに比べると些細なもの
+	- ただ有用なものもあるので、認識しておくべき
+- TypeScriptが提供する最も徹底したチェックを行うにはstrictを有効にする
 
 ## 2. TypeScriptの型システム
 - sample
