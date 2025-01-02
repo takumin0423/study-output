@@ -223,3 +223,6 @@ const Cylinder = (radius: number, height: number) => ({ radius, height });
 	- symbol: ES2015で追加
 	- bigint: ES2020で追加
 - プリミティブは変更不可能であり、メソッドを持たない点でオブジェクトと区別される
+- 文字列プリミティブにはメソッドがないが、JavaScriptにはStringオブジェクトが定義されていて、これにはメソッドがある
+	- JavaScriptはこれらの型を自由に相互変換する
+	- 文字列プリミティブで `charAt`のようなメソッドを呼び出すと、JavaScriptはそのプリミティブをStringオブジェクトでラップし、そのメソッドを呼び出してからオブジェクトを破棄する
