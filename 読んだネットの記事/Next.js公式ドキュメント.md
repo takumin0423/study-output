@@ -238,3 +238,6 @@ export const dynamic = 'force-dynamic'
 - フォーム内で呼び出されると、 `action`は自動的に `FormData`オブジェクトを受け取る
 	- Reactの `useState`を使って各フィールドの状態を管理する必要はなく、ネイティブの `FormData`メソッドを使用してデータを抽出できる
 - 複数のフィールドを持つフォームを扱う際には、 `entries()`メソッドとJavaScriptの `Object.fromEntries()`を併用することが推奨されている
+- JavaScriptの `bind`メソッドを使って、Server Actionに追加の引数を渡すことができる
+	- `bind`はServer ComponentとClient Componentの両方で動作し、プログレッシブエンハンスメントもサポートしている
+- 

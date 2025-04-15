@@ -1,7 +1,3 @@
-## これはなに
-- 重要だと感じた部分の読書メモ
-- 読んだら追記する
-
 ## 1. TypeScriptについて知ろう
 ### TypeScriptとJavaScriptの関係を理解する
 - TypeScriptはJavaScriptのスーパーセット
